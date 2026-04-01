@@ -381,8 +381,8 @@ def mostrar_metricas_generales():
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-title">Total Valor Facturado</div>
-            <div class="metric-value">${total_valor_facturado:,.0f}</div>
+            <div class="metric-title">Total Valor Facturado</div>            
+            <div class="metric-value">$ {f"{(total_valor_facturado/1_000_000):,.0f}".replace(",", ".")}MM</div>
         </div>
         """, unsafe_allow_html=True)
     with col4:
@@ -409,7 +409,7 @@ def mostrar_escala_salud():
         emoji = "🔴"
         status = "Alto Riesgo"
         color = "#dc3545"  # Rojo
-    st.subheader("📊 Escala de Salud de la Empresa")
+    st.subheader("📊 Porcentaje de facturas pendientes")
     progress_html = f"""
     <div style="width: 100%; background-color: #e9ecef; border-radius: 10px; height: 20px;">
         <div style="width: {salud_porcentaje}%; background-color: {color}; height: 20px; border-radius: 10px;"></div>
