@@ -495,7 +495,7 @@ elif opcion == "Facturas pendientes":
         def estilo_violetta(row):
             colores = ['#f3e5ff', '#e0bbff']
             return ['background-color: %s' % colores[i % 2] for i in range(len(row))]
-        df_tabla = df_total_pendiente_por_anio.copy()
+    df_tabla = df_total_pendiente_por_anio.copy()
     st.dataframe(
     df_tabla.style
         .format({
