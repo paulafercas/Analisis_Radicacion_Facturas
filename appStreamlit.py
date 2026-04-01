@@ -848,7 +848,8 @@ elif opcion == "Chatbot":
         • Tipos de productos comprados: {total_productos_unicos}
         • Total de órdenes de compra: {total_facturaciones}
         • Gasto total acumulado: ${total_valor_facturado:,.2f}
-        • Cartera pendiente de pago: {salud_porcentaje:.1f}% (${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
+        • Cartera pendiente de pago: {salud_porcentaje:.1f}% 
+        • Total pendiente de pago:${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
         • Salud de Pagos: {"🟢 SALUDABLE" if salud_porcentaje < 30 else "🟡 MODERADO" if salud_porcentaje < 70 else "🔴 CRÍTICO"}
         
         **📊 Análisis Integral:**
