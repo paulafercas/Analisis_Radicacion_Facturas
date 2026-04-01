@@ -520,14 +520,30 @@ elif opcion == "Copiloto":
     st.header("🤖 Copiloto Financiero - Análisis Inteligente")
     st.markdown("*Chatbot inteligente para análisis empresarial y recomendaciones estratégicas*")
     
+    # ==================== FUNCIONES AUXILIARES ====================
+    
+    import re
+    
+    def extraer_numero_top(pregunta):
+        """Extrae el número N de preguntas como 'top N' o 'top X productos'"""
+        # Buscar patrones como "top 2", "top 5", "top X"
+        match = re.search(r'top\s+(\d+)', pregunta, re.IGNORECASE)
+        if match:
+            numero = int(match.group(1))
+            return max(1, min(numero, 20))  # Limitar entre 1 y 20
+        return None
+    
     # ==================== FUNCIONES DE ANÁLISIS ====================
     
-    def obtener_analisis_productos_mas_vendidos():
+    def obtener_analisis_productos_mas_vendidos(cantidad=5):
         """Análisis de productos más comprados (mayor gasto)"""
         datos = df_pedidos.groupby('Producto').agg({
             'cantidad': 'sum',
             'Total pedido': 'sum'
-        }).reset_index().sort_values('Total pedido', ascending=False).head(5)
+        }).reset_index().sort_values('Total pedido', ascending=False).head(cantidad)
+        
+        if len(datos) == 0:
+            return "No hay datos disponibles."
         
         top_producto = datos.iloc[0]
         total_valor_top = top_producto['Total pedido']
@@ -535,34 +551,46 @@ elif opcion == "Copiloto":
         concentracion = (total_valor_top / datos['Total pedido'].sum()) * 100
         
         respuesta = f"""
-        **🛒 Productos Más Comprados (Mayor Gasto)**
+        **🛒 Top {cantidad} Productos Más Comprados (Mayor Gasto)**
         
         El producto con mayor inversión/gasto es **{top_producto['Producto']}** con:
         • Cantidad comprada: {top_producto['cantidad']:,.0f} unidades
         • Valor gastado: ${total_valor_top:,.2f}
         • Concentración: {concentracion:.1f}% del gasto total en productos
         
+        **Desglose de Top {cantidad}:**
+        """
+        for i, row in enumerate(datos.iterrows(), 1):
+            row = row[1]
+            pct = (row['Total pedido'] / datos['Total pedido'].sum()) * 100
+            respuesta += f"\n{i}. **{row['Producto']}**: ${row['Total pedido']:,.2f} ({pct:.1f}%)"
+        
+        respuesta += f"""
+        
         **📊 Análisis:**
-        Tu empresa concentra {concentracion:.1f}% de sus compras en este producto. 
+        Tu empresa concentra {concentracion:.1f}% de sus compras en el producto principal. 
         Esto indica una alta dependencia de este producto en particular, lo que puede ser 
         favorable si hay economía de escala, pero riesgoso si hay disrupciones en el suministro 
         o fluctuaciones de precio.
         
         **💡 Recomendaciones Estratégicas:**
         1. **Negociación de Volumen**: Usa este volumen alto para negociar mejores precios con el proveedor
-        2. **Diversificación de Proveedores**: Busca proveedores alternativos para este producto (no pongas todos los huevos en una canasta)
+        2. **Diversificación de Proveedores**: Busca proveedores alternativos para estos productos
         3. **Contrato a Largo Plazo**: Asegura precios fijos mediante contratos anuales o plurianuales
         4. **Análisis de Alternativas**: Evalúa si existen sustitutos que ofrezcan mejor relación costo-beneficio
         5. **Gestión de Inventario**: Optimiza el almacenamiento y rotación para evitar pérdidas
         """
         return respuesta
     
-    def obtener_analisis_productos_menos_vendidos():
+    def obtener_analisis_productos_menos_vendidos(cantidad=3):
         """Análisis de productos menos comprados (menor gasto)"""
         datos = df_pedidos.groupby('Producto').agg({
             'cantidad': 'sum',
             'Total pedido': 'sum'
-        }).reset_index().sort_values('Total pedido', ascending=True).head(3)
+        }).reset_index().sort_values('Total pedido', ascending=True).head(cantidad)
+        
+        if len(datos) == 0:
+            return "No hay datos disponibles."
         
         peor_producto = datos.iloc[0]
         valor_peor = peor_producto['Total pedido']
@@ -570,12 +598,20 @@ elif opcion == "Copiloto":
         brecha = ((promedio_general - valor_peor) / promedio_general) * 100
         
         respuesta = f"""
-        **📦 Productos Menos Comprados (Menor Gasto)**
+        **📦 Top {cantidad} Productos Menos Comprados (Menor Gasto)**
         
         El producto con menor gasto es **{peor_producto['Producto']}** con:
         • Cantidad comprada: {peor_producto['cantidad']:,.0f} unidades
         • Valor gastado: ${valor_peor:,.2f}
         • Brecha vs promedio: {brecha:.1f}% por debajo
+        
+        **Desglose de Top {cantidad}:**
+        """
+        for i, row in enumerate(datos.iterrows(), 1):
+            row = row[1]
+            respuesta += f"\n{i}. **{row['Producto']}**: ${row['Total pedido']:,.2f}"
+        
+        respuesta += f"""
         
         **📊 Análisis:**
         Estos productos representan inversiones menores y señales de oportunidad:
@@ -593,7 +629,7 @@ elif opcion == "Copiloto":
         """
         return respuesta
     
-    def obtener_analisis_proveedores_principales():
+    def obtener_analisis_proveedores_principales(cantidad=5):
         """Análisis de proveedores principales y dependencia"""
         datos_facturaciones = df_facturacion.groupby('nombre_proveedor').agg({
             'numero_factura': 'count',
@@ -601,19 +637,31 @@ elif opcion == "Copiloto":
         }).reset_index().rename(columns={
             'numero_factura': 'total_facturas',
             'valor_total $': 'valor_total'
-        }).sort_values('valor_total', ascending=False).head(5)
+        }).sort_values('valor_total', ascending=False).head(cantidad)
+        
+        if len(datos_facturaciones) == 0:
+            return "No hay datos disponibles."
         
         proveedor_top = datos_facturaciones.iloc[0]
         total_valor_empresa = df_facturacion['valor_total $'].sum()
         concentracion_proveedor = (proveedor_top['valor_total'] / total_valor_empresa) * 100
         
         respuesta = f"""
-        **🏭 Proveedores Principales (Mayor Inversión)**
+        **🏭 Top {cantidad} Proveedores Principales (Mayor Inversión)**
         
         Tu proveedor estratégico es **{proveedor_top['nombre_proveedor']}**:
         • Número de facturas/órdenes: {proveedor_top['total_facturas']:.0f}
         • Valor invertido/comprado: ${proveedor_top['valor_total']:,.2f}
         • % del total de compras: {concentracion_proveedor:.1f}%
+        
+        **Desglose de Top {cantidad} Proveedores:**
+        """
+        for i, row in enumerate(datos_facturaciones.iterrows(), 1):
+            row = row[1]
+            pct = (row['valor_total'] / total_valor_empresa) * 100
+            respuesta += f"\n{i}. **{row['nombre_proveedor']}**: ${row['valor_total']:,.2f} ({pct:.1f}%) - {row['total_facturas']:.0f} órdenes"
+        
+        respuesta += f"""
         
         **📊 Análisis:**
         Tu empresa depende en un {concentracion_proveedor:.1f}% de este proveedor principal. 
@@ -835,13 +883,19 @@ elif opcion == "Copiloto":
         user_message = user_input.lower()
         st.session_state.chat_history.append({"role": "user", "message": f"**Pregunta:** {user_input}"})
         
+        # Extraer número si dice "top N"
+        numero_top = extraer_numero_top(user_message)
+        
         # Determinar tema y generar respuesta
         if "producto" in user_message and ("más" in user_message or "top" in user_message or "mayor" in user_message or "vend" in user_message):
-            respuesta = obtener_analisis_productos_mas_vendidos()
+            cantidad = numero_top if numero_top else 5
+            respuesta = obtener_analisis_productos_mas_vendidos(cantidad)
         elif "producto" in user_message and ("menos" in user_message or "bajo" in user_message or "menor" in user_message):
-            respuesta = obtener_analisis_productos_menos_vendidos()
+            cantidad = numero_top if numero_top else 3
+            respuesta = obtener_analisis_productos_menos_vendidos(cantidad)
         elif "proveedor" in user_message:
-            respuesta = obtener_analisis_proveedores_principales()
+            cantidad = numero_top if numero_top else 5
+            respuesta = obtener_analisis_proveedores_principales(cantidad)
         elif ("cartera" in user_message or "pendiente" in user_message or "cobrar" in user_message or "deuda" in user_message or "pago" in user_message):
             respuesta = obtener_analisis_facturas_pendientes()
         elif "categor" in user_message:
@@ -880,12 +934,17 @@ elif opcion == "Copiloto":
                 
                 # Generar respuesta según el tipo de sugerencia
                 user_message = sugerencia.lower()
+                numero_top = extraer_numero_top(user_message)
+                
                 if "producto" in user_message and ("más" in user_message or "top" in user_message):
-                    respuesta = obtener_analisis_productos_mas_vendidos()
+                    cantidad = numero_top if numero_top else 5
+                    respuesta = obtener_analisis_productos_mas_vendidos(cantidad)
                 elif "producto" in user_message and ("menos" in user_message):
-                    respuesta = obtener_analisis_productos_menos_vendidos()
+                    cantidad = numero_top if numero_top else 3
+                    respuesta = obtener_analisis_productos_menos_vendidos(cantidad)
                 elif "proveedor" in user_message:
-                    respuesta = obtener_analisis_proveedores_principales()
+                    cantidad = numero_top if numero_top else 5
+                    respuesta = obtener_analisis_proveedores_principales(cantidad)
                 elif "cartera" in user_message or "pendiente" in user_message:
                     respuesta = obtener_analisis_facturas_pendientes()
                 elif "categor" in user_message:
