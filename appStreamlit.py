@@ -841,16 +841,16 @@ elif opcion == "Chatbot":
         salud_porcentaje = (df_total_pendiente_por_anio['total_pendiente'].sum() / total_valor_facturado) * 100 if total_valor_facturado > 0 else 0
         
         respuesta = f"""
-        **� Estado General de la Empresa (Análisis de Compras y Gastos)**
+        **Estado General de la Empresa (Análisis de Compras y Gastos)**
         
-        **KPIs Principales:**
-        • Total de proveedores activos: {total_proveedores_unicos}
-        • Tipos de productos comprados: {total_productos_unicos}
-        • Total de órdenes de compra: {total_facturaciones}
-        • Gasto total acumulado: ${total_valor_facturado:,.2f}
-        • Cartera pendiente de pago: {salud_porcentaje:.1f}% 
-        • Total pendiente de pago:${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
-        • Salud de Pagos: {"🟢 SALUDABLE" if salud_porcentaje < 30 else "🟡 MODERADO" if salud_porcentaje < 70 else "🔴 CRÍTICO"}
+        **KPIs Principales:**\n
+        • Total de proveedores activos: {total_proveedores_unicos}\n
+        • Tipos de productos comprados: {total_productos_unicos}\n
+        • Total de órdenes de compra: {total_facturaciones}\n
+        • Gasto total acumulado: ${total_valor_facturado:,.2f}\n
+        • Cartera pendiente de pago: {salud_porcentaje:.1f}% \n
+        • Total pendiente:(${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})\n
+        • Salud de Pagos: {"🟢 SALUDABLE" if salud_porcentaje < 30 else "🟡 MODERADO" if salud_porcentaje < 70 else "🔴 CRÍTICO"}\n
         
         **📊 Análisis Integral:**
         Tu empresa gestiona compras a través de {total_proveedores_unicos} proveedores para {total_productos_unicos} tipos de productos.
