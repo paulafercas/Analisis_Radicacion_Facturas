@@ -34,11 +34,11 @@ Analizar el comportamiento de las facturas en una empresa en los últimos 4 año
 3. **Proveedores**: Evaluación de proveedores principales y su impacto en el negocio
 4. **Facturas Pendientes**: Seguimiento de cartera, detectando riesgos de incobrables
 5. **Facturas**: Análisis temporal de facturación agregada por mes y año
-6. **🤖 Copiloto Financiero**: Chatbot inteligente con análisis estratégicos
+6. **🤖 Chatbot Financiero**: Chatbot inteligente con análisis estratégicos
 
-### 🤖 Copiloto Financiero - Nuevo
+### 🤖 Chabot Financiero - Nuevo
 
-El Copiloto es un asistente IA que proporciona análisis inteligentes sobre 7 aspectos clave del negocio:
+El Chatbot es un asistente IA que proporciona análisis inteligentes sobre 7 aspectos clave del negocio:
 
 ✅ **7 Análisis Estratégicos:**
 1. **Productos Más Vendidos** - Concentración y diversificación de ventas

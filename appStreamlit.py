@@ -358,7 +358,7 @@ h1, h2, h3, h4, h5, h6 {
 
 # Navegación con sidebar
 st.sidebar.title("Navegación")
-opcion = st.sidebar.radio("Selecciona una opción:", ["Inicio", "Productos", "Proveedores", "Facturas pendientes", "Facturas", "Copiloto"])
+opcion = st.sidebar.radio("Selecciona una opción:", ["Inicio", "Productos", "Proveedores", "Facturas pendientes", "Facturas", "Chatbot"])
 
 # Función para mostrar métricas generales
 def mostrar_metricas_generales():
@@ -536,8 +536,8 @@ elif opcion == "Facturas":
     fig_pie = px.pie(df_frecuencia_tipo_factura, names='tipo_factura', values='cantidad', title='Distribución de Tipo de Facturas (Física/Electrónica)', color_discrete_sequence=['#1f77b4', '#9467bd'])
     st.plotly_chart(fig_pie)
 
-elif opcion == "Copiloto":
-    st.header("🤖 Copiloto Financiero - Análisis Inteligente")
+elif opcion == "chatbot":
+    st.header("🤖 Chatbot Financiero - Análisis Inteligente")
     st.markdown("*Chatbot inteligente para análisis empresarial y recomendaciones estratégicas*")
     
     # ==================== FUNCIONES AUXILIARES ====================
