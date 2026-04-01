@@ -416,7 +416,7 @@ def mostrar_escala_salud():
     </div>
     """
     st.markdown(progress_html, unsafe_allow_html=True)
-    st.write(f"{emoji} Porcentaje de Endeudamiento: {salud_porcentaje:.1f}% - {status}")
+    st.write(f"{emoji}{salud_porcentaje:.1f}% - {status}")
 
 # Mostrar métricas y salud en todas las páginas
 mostrar_metricas_generales()
