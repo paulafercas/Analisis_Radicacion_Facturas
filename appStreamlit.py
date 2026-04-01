@@ -486,7 +486,7 @@ elif opcion == "Facturas pendientes":
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Facturas Pendientes por Año")
-        fig = px.bar(df_facturas_pendientes_por_anio, x='anio', y='facturas_pendientes', color='anio', color_discrete_sequence=px.colors.qualitative.Set1)
+        fig = px.bar(df_facturas_pendientes_por_anio, x='Año', y='facturas_pendientes', color='anio', color_discrete_sequence=px.colors.qualitative.Set1)
         fig.update_xaxes(showticklabels=False)
         fig.update_layout(showlegend=True)
         st.plotly_chart(fig)
@@ -497,7 +497,7 @@ elif opcion == "Facturas pendientes":
             return ['background-color: %s' % colores[i % 2] for i in range(len(row))]
         st.dataframe(
             df_total_pendiente_por_anio.style
-                .apply(estilo_violetta, axis=1)
+            .apply(lambda x: f"{x:,.0f}".replace(",", "X").replace(".", ",").replace("X", "."),estilo_violetta, axis=1)
                 .hide(axis='index')
                 .set_table_styles([
                     {'selector': 'th', 'props': [('background-color', '#d1c4e9'), ('color', '#3f2f67'), ('font-weight', 'bold')]},
