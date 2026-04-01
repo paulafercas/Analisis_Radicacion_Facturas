@@ -536,7 +536,7 @@ elif opcion == "Facturas":
     fig_pie = px.pie(df_frecuencia_tipo_factura, names='tipo_factura', values='cantidad', title='Distribución de Tipo de Facturas (Física/Electrónica)', color_discrete_sequence=['#1f77b4', '#9467bd'])
     st.plotly_chart(fig_pie)
 
-elif opcion == "chatbot":
+elif opcion == "Copiloto":
     st.header("🤖 Chatbot Financiero - Análisis Inteligente")
     st.markdown("*Chatbot inteligente para análisis empresarial y recomendaciones estratégicas*")
     
