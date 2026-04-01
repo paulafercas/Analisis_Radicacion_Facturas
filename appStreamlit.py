@@ -486,7 +486,7 @@ elif opcion == "Facturas pendientes":
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("Facturas Pendientes por Año")
-        fig = px.bar(df_facturas_pendientes_por_anio, x='Año', y='facturas_pendientes', color='anio', color_discrete_sequence=px.colors.qualitative.Set1)
+        fig = px.bar(df_facturas_pendientes_por_anio, x='anio', y='facturas_pendientes', color='anio', color_discrete_sequence=px.colors.qualitative.Set1)
         fig.update_xaxes(showticklabels=False)
         fig.update_layout(showlegend=True)
         st.plotly_chart(fig)
