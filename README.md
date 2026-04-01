@@ -24,3 +24,60 @@ Analizar el comportamiento de las facturas en una empresa en los últimos 4 año
 * Comparar los valores de facturación y precios registrados con sus respectivos promedios generales, utilizando subconsultas y funciones en SQL, con el propósito de detectar facturas y productos que presenten comportamientos superiores al promedio dentro del periodo analizado.
 
 ![Diagrama entidad-relación que muestra el proceso de recepción de facturación y pago a proveedores. En la parte superior, la entidad Proveedores se conecta a los atributos NIT_Proveedor, Nombre_proveedor, Ubicación y Categoría. Desde Proveedores fluye hacia el proceso Radicar, que se conecta a la entidad Facturación. La entidad Facturación contiene los atributos ID_Registro, NIT_Proveedor, Número_pedido, Fecha_ingresa en el lado izquierdo, y Categoría, Sociedad, Estado_factura, Tipo_factura en el lado derecho. Desde Facturación se continúa al proceso Detallar, que se conecta a la entidad Pedidos. La entidad Pedidos presenta los atributos Número_pedido, Producto, Cantidad y Valor. El diagrama utiliza símbolos de entidades en óvalos azules, procesos en rectángulos azules y conectores de líneas. La estructura general muestra el flujo de datos desde proveedores hasta los detalles de pedidos.](Data/Diagrama_MER.jpg)
+
+## Características del Dashboard
+
+### 📊 Módulos Principales
+
+1. **Inicio**: Panel de bienvenida con métricas generales y escala de salud de la empresa
+2. **Productos**: Análisis de productos más/menos vendidos con valor facturado
+3. **Proveedores**: Evaluación de proveedores principales y su impacto en el negocio
+4. **Facturas Pendientes**: Seguimiento de cartera, detectando riesgos de incobrables
+5. **Facturas**: Análisis temporal de facturación agregada por mes y año
+6. **🤖 Copiloto Financiero**: Chatbot inteligente con análisis estratégicos
+
+### 🤖 Copiloto Financiero - Nuevo
+
+El Copiloto es un asistente IA que proporciona análisis inteligentes sobre 7 aspectos clave del negocio:
+
+✅ **7 Análisis Estratégicos:**
+1. **Productos Más Vendidos** - Concentración y diversificación de ventas
+2. **Productos Menos Vendidos** - Identificación de oportunidades o riesgos
+3. **Proveedores Principales** - Análisis de dependencia y alianzas estratégicas
+4. **Facturas Pendientes** - Salud de cartera y riesgos crediticios
+5. **Categorías Principales** - Distribución de ingresos y diversificación
+6. **Promedios de Facturación** - Tendencias, ticket promedio, velocidad operativa
+7. **Salud Integral** - Estado general y recomendaciones prioritarias
+
+🎯 **Cada respuesta incluye:**
+- Datos específicos y comparativas
+- Análisis de impacto empresarial
+- 5 Recomendaciones estratégicas focalizadas en:
+  - Salud financiera de la empresa
+  - Fortalecimiento de relaciones comerciales
+  - Optimización de productos y categorías
+
+📝 **Cómo usar:**
+- Escribe preguntas naturales en el chatbot
+- O selecciona una de las preguntas sugeridas con un clic
+- El copiloto analiza y proporciona insights accionables
+
+*Más detalles en [COPILOTO_GUIA.md](COPILOTO_GUIA.md)*
+
+## Instalación y Ejecución
+
+### Requisitos
+- Python 3.8+
+- pip (gestor de paquetes)
+
+### Instalación de dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Ejecutar la aplicación
+```bash
+streamlit run appStreamlit.py
+```
+
+La aplicación se abrirá en `http://localhost:8501`
