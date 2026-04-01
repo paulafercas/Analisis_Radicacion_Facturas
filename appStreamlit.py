@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from pandasql import sqldf
+import unicodedata
 
 #Dataframe para facturacion.csv
 df_facturacion= pd.read_csv("Data/Facturacion.csv", sep=';', encoding='latin1')
@@ -14,6 +15,27 @@ df_proveedor = pd.read_csv("Data/Proveedor.csv", sep=';', encoding='latin1')
 
 # Convertir fechas a datetime
 df_facturacion['fecha_factura'] = pd.to_datetime(df_facturacion['fecha_factura'])
+
+# Normalizar cadenas: eliminar tildes / acentos en producto, proveedor, categoria, responsable
+
+def normalizar_texto(valor):
+    if pd.isna(valor):
+        return valor
+    texto = str(valor)
+    texto = unicodedata.normalize('NFKD', texto)
+    texto = ''.join(c for c in texto if not unicodedata.combining(c))
+    return texto
+
+if 'Producto' in df_pedidos.columns:
+    df_pedidos['Producto'] = df_pedidos['Producto'].apply(normalizar_texto)
+
+for col in ['nombre_proveedor', 'categoria', 'responsable', 'tipo_factura']:
+    if col in df_facturacion.columns:
+        df_facturacion[col] = df_facturacion[col].apply(normalizar_texto)
+
+for col in ['nombre_proveedor', 'categoria', 'ubicacion']:
+    if col in df_proveedor.columns:
+        df_proveedor[col] = df_proveedor[col].apply(normalizar_texto)
 
 #Ejecutamos sql
 pysqldf = lambda q: sqldf(q, globals())
@@ -209,12 +231,10 @@ df_totales_generales = pd.DataFrame({
     'valor': [total_proveedores_unicos, total_facturaciones, total_valor_facturado, total_productos_unicos]
 })
 
-# Limpiar nombres: remover tildes y truncar si son largos
-import unicodedata
+# Limpiar nombres: remover tildes (sin truncar)
 
 def limpiar_nombres(df, columna):
-    df[columna] = df[columna].astype(str).apply(lambda x: unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode('ascii'))
-    df[columna] = df[columna].apply(lambda x: x[:20] + '...' if len(x) > 20 else x)
+    df[columna] = df[columna].astype(str).apply(normalizar_texto)
     return df
 
 # Aplicar limpieza a DataFrames relevantes
