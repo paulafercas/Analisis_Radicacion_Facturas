@@ -496,17 +496,17 @@ elif opcion == "Facturas pendientes":
             colores = ['#f3e5ff', '#e0bbff']
             return ['background-color: %s' % colores[i % 2] for i in range(len(row))]
         st.dataframe(
-    df_total_pendiente_por_anio.style
-        .format({
-            "total_pendiente": lambda x: f"{x:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
-        })
-        .apply(estilo_violetta, axis=1)
-        .hide(axis='index')
-        .set_table_styles([
-            {'selector': 'th', 'props': [('background-color', '#d1c4e9'), ('color', '#3f2f67'), ('font-weight', 'bold')]},
-            {'selector': 'td', 'props': [('padding', '8px'), ('text-align', 'center'), ('color', '#2a1f4b')]}
-        ])
-)
+            df_total_pendiente_por_anio.style
+            .format({
+                "total_pendiente": lambda x: f"{x:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            })
+            .apply(estilo_violetta, axis=1)
+            .hide(axis='index')
+            .set_table_styles([
+                {'selector': 'th', 'props': [('background-color', '#d1c4e9'), ('color', '#3f2f67'), ('font-weight', 'bold')]},
+                {'selector': 'td', 'props': [('padding', '8px'), ('text-align', 'center'), ('color', '#2a1f4b')]}
+            ])
+    )
     st.subheader("Responsables con Más Facturas Pendientes")
     fig = px.bar(df_responsable_mas_pendientes, x='responsable', y='total_pendientes', color='responsable', color_discrete_sequence=px.colors.qualitative.Set1)
     fig.update_xaxes(showticklabels=False)
