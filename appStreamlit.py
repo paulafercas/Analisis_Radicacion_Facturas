@@ -523,7 +523,7 @@ elif opcion == "Copiloto":
     # ==================== FUNCIONES DE ANÁLISIS ====================
     
     def obtener_analisis_productos_mas_vendidos():
-        """Análisis de productos más vendidos con valor facturado"""
+        """Análisis de productos más comprados (mayor gasto)"""
         datos = df_pedidos.groupby('Producto').agg({
             'cantidad': 'sum',
             'Total pedido': 'sum'
@@ -535,27 +535,30 @@ elif opcion == "Copiloto":
         concentracion = (total_valor_top / datos['Total pedido'].sum()) * 100
         
         respuesta = f"""
-        **🏆 Productos Más Vendidos**
+        **🛒 Productos Más Comprados (Mayor Gasto)**
         
-        El producto líder es **{top_producto['Producto']}** con:
-        • Cantidad vendida: {top_producto['cantidad']:,.0f} unidades
-        • Valor facturado: ${total_valor_top:,.2f}
-        • Concentración: {concentracion:.1f}% del valor total
+        El producto con mayor inversión/gasto es **{top_producto['Producto']}** con:
+        • Cantidad comprada: {top_producto['cantidad']:,.0f} unidades
+        • Valor gastado: ${total_valor_top:,.2f}
+        • Concentración: {concentracion:.1f}% del gasto total en productos
         
         **📊 Análisis:**
-        El volumen de ventas está concentrado en pocos productos ({concentracion:.1f}% en el principal). 
-        Esto sugiere que tu empresa depende significativamente de estos productos clave.
+        Tu empresa concentra {concentracion:.1f}% de sus compras en este producto. 
+        Esto indica una alta dependencia de este producto en particular, lo que puede ser 
+        favorable si hay economía de escala, pero riesgoso si hay disrupciones en el suministro 
+        o fluctuaciones de precio.
         
         **💡 Recomendaciones Estratégicas:**
-        1. **Diversificación**: Considera desarrollar nuevos productos para reducir riesgos
-        2. **Fortalecimiento**: Asegura cadenas de suministro robustas para los productos estrella
-        3. **Pricing**: Evalúa aumentar márgenes de los productos de mayor demanda
-        4. **Marketing**: Invierte en promoción de productos con menor rotación
+        1. **Negociación de Volumen**: Usa este volumen alto para negociar mejores precios con el proveedor
+        2. **Diversificación de Proveedores**: Busca proveedores alternativos para este producto (no pongas todos los huevos en una canasta)
+        3. **Contrato a Largo Plazo**: Asegura precios fijos mediante contratos anuales o plurianuales
+        4. **Análisis de Alternativas**: Evalúa si existen sustitutos que ofrezcan mejor relación costo-beneficio
+        5. **Gestión de Inventario**: Optimiza el almacenamiento y rotación para evitar pérdidas
         """
         return respuesta
     
     def obtener_analisis_productos_menos_vendidos():
-        """Análisis de productos menos vendidos"""
+        """Análisis de productos menos comprados (menor gasto)"""
         datos = df_pedidos.groupby('Producto').agg({
             'cantidad': 'sum',
             'Total pedido': 'sum'
@@ -567,30 +570,31 @@ elif opcion == "Copiloto":
         brecha = ((promedio_general - valor_peor) / promedio_general) * 100
         
         respuesta = f"""
-        **📉 Productos Menos Vendidos**
+        **📦 Productos Menos Comprados (Menor Gasto)**
         
-        El producto con menor desempeño es **{peor_producto['Producto']}** con:
-        • Cantidad vendida: {peor_producto['cantidad']:,.0f} unidades
-        • Valor facturado: ${valor_peor:,.2f}
+        El producto con menor gasto es **{peor_producto['Producto']}** con:
+        • Cantidad comprada: {peor_producto['cantidad']:,.0f} unidades
+        • Valor gastado: ${valor_peor:,.2f}
         • Brecha vs promedio: {brecha:.1f}% por debajo
         
         **📊 Análisis:**
-        Estos productos representan oportunidades de mejora. Su baja facturación puede deberse a:
-        - Falta de demanda del mercado
-        - Problemas de calidad o presentación
-        - Desconocimiento del cliente
-        - Precios no competitivos
+        Estos productos representan inversiones menores y señales de oportunidad:
+        - Baja demanda o uso ocasional
+        - Productos complementarios o especializados
+        - Posibles candidatos para eliminar si no generan valor
+        - O productos de emergencia con compras irregulares
         
         **💡 Recomendaciones Estratégicas:**
-        1. **Revisar Rentabilidad**: Verifique si estos productos son rentables o están perdiendo dinero
-        2. **Discontinuar o Reformular**: Considere retirar productos no rentables o mejorar su propuesta
-        3. **Ajuste de Precios**: Intente descuentos estratégicos para estimular demanda
-        4. **Bundle Estratégico**: Combine con productos exitosos para impulsar ventas
+        1. **Análisis de Criticidad**: Determina si estos productos son esenciales o pueden ser descontinuados
+        2. **Consolidación de Compras**: Si son necesarios, consolida con otros productos para mejorar negociación
+        3. **Revisión de Proveedor**: Verifica si cambiar de proveedor reduciría costos
+        4. **Automatización de Reorden**: Implementa sistema automático para no perder economía de escala
+        5. **Evaluación ROI**: Cuestiona si el costo administrativo justifica la compra
         """
         return respuesta
     
     def obtener_analisis_proveedores_principales():
-        """Análisis de proveedores principales"""
+        """Análisis de proveedores principales y dependencia"""
         datos_facturaciones = df_facturacion.groupby('nombre_proveedor').agg({
             'numero_factura': 'count',
             'valor_total $': 'sum'
@@ -604,24 +608,26 @@ elif opcion == "Copiloto":
         concentracion_proveedor = (proveedor_top['valor_total'] / total_valor_empresa) * 100
         
         respuesta = f"""
-        **🏭 Proveedores Principales**
+        **🏭 Proveedores Principales (Mayor Inversión)**
         
         Tu proveedor estratégico es **{proveedor_top['nombre_proveedor']}**:
-        • Número de facturaciones: {proveedor_top['total_facturas']:.0f}
-        • Valor facturado: ${proveedor_top['valor_total']:,.2f}
+        • Número de facturas/órdenes: {proveedor_top['total_facturas']:.0f}
+        • Valor invertido/comprado: ${proveedor_top['valor_total']:,.2f}
         • % del total de compras: {concentracion_proveedor:.1f}%
         
         **📊 Análisis:**
-        Tu empresa tiene {len(datos_facturaciones)} proveedores principales. La concentración del {concentracion_proveedor:.1f}% 
-        indica dependencia en este proveedor. Esto puede ser positivo (relación consolidada) o 
-        riesgoso (vulnerabilidad si hay problemas con el proveedor).
+        Tu empresa depende en un {concentracion_proveedor:.1f}% de este proveedor principal. 
+        Una concentración alta indica:
+        - **Oportunidad**: Poder de negociación por volumen
+        - **Riesgo**: Vulnerabilidad si hay disrupciones o cambios de precio
+        - **Estabilidad relacional**: Posible relación consolidada y confiable
         
         **💡 Recomendaciones Estratégicas:**
-        1. **Fortalecer Relaciones**: Negocie contratos a largo plazo con proveedores clave para mejores términos
-        2. **Diversificación**: Busque proveedores alternativos para reducir riesgo
-        3. **Evaluación Periódica**: Revise calidad, plazos y precios regularmente
-        4. **Alianzas Estratégicas**: Considere acuerdos de volumen discounted con proveedores principales
-        5. **Contingentes**: Tenga proveedores de respaldo en caso de disrupciones
+        1. **Fortalecer Relación**: Negocia contrato plurianual con este proveedor clave para mejores términos
+        2. **Diversificación de Riesgo**: Identifica 1-2 proveedores alternativos para este volumen como Plan B
+        3. **Auditoría de Costos**: Solicita benchmarking de precios comparados con competencia
+        4. **Acuerdos de Volumen**: Negocia descuentos escalonados por volumen anual
+        5. **Contingencia**: Desarrolla Plan B en caso de disrupciones (cierre, huelga, problemas de calidad)
         """
         return respuesta
     
@@ -669,7 +675,7 @@ elif opcion == "Copiloto":
         return respuesta
     
     def obtener_analisis_categorias():
-        """Análisis de categorías principales"""
+        """Análisis de categorías principales de gasto"""
         datos_categoria = df_facturacion.groupby('categoria')['valor_total $'].sum().reset_index().sort_values('valor_total $', ascending=False)
         total_facturado = datos_categoria['valor_total $'].sum()
         datos_categoria['porcentaje'] = (datos_categoria['valor_total $'] / total_facturado) * 100
@@ -677,9 +683,9 @@ elif opcion == "Copiloto":
         top_categoria = datos_categoria.iloc[0]
         
         respuesta = f"""
-        **📂 Categorías Principales y Aporte**
+        **📂 Categorías Principales (Distribución de Gastos)**
         
-        **Top 3 Categorías por Valor Facturado:**
+        **Top 3 Categorías por Gasto Acumulado:**
         """
         for i in range(min(3, len(datos_categoria))):
             row = datos_categoria.iloc[i]
@@ -688,25 +694,25 @@ elif opcion == "Copiloto":
         respuesta += f"""
         
         **📊 Análisis:**
-        La categoría '{top_categoria['categoria']}' representa el {top_categoria['porcentaje']:.1f}% del negocio.
-        La diversificación por categoría es: {"buena" if datos_categoria.iloc[0]['porcentaje'] < 40 else "concentrada" if datos_categoria.iloc[0]['porcentaje'] < 60 else "muy concentrada"}.
+        La categoría '{top_categoria['categoria']}' representa el {top_categoria['porcentaje']:.1f}% de tu gasto total.
+        La distribución es: {"diversificada (bueno)" if datos_categoria.iloc[0]['porcentaje'] < 40 else "concentrada" if datos_categoria.iloc[0]['porcentaje'] < 60 else "muy concentrada (riesgoso)"}.
         
         **Implicaciones Financieras:**
-        - **Riesgo de mercado**: Cambios en una categoría afectan significativamente el resultado
-        - **Oportunidades**: Categorías emergentes pueden generar crecimiento
-        - **Seasonal**: Algunas categorías pueden tener patrones estacionales
+        - **Riesgo de Presupuesto**: Cambios en una categoría afectan significativamente el gasto total
+        - **Oportunidades de Ahorro**: Categorías mayores ofrecen más potencial para reducir costos
+        - **Estacionalidad**: Algunas categorías pueden tener patrones estacionales predecibles
         
         **💡 Recomendaciones Estratégicas:**
-        1. **Análisis de Márgenes**: Verifique rentabilidad de cada categoría
-        2. **Especialización**: Fortalezca categorías rentables
-        3. **Innovación**: Desarrolle nuevas categorías para diversificar riesgos
-        4. **Pricing Estratégico**: Ajuste precios según demanda de cada categoría
-        5. **Mix Óptimo**: Intente conseguir 30-30-30-10 en distribución de categorías
+        1. **Análisis de ROI**: Evalúa rentabilidad/necesidad de cada categoría de gasto
+        2. **Negociación de Bloques**: Consolida volumen por categoría para mejores precios
+        3. **Optimización de Categoría Mayor**: Dedica recursos a optimizar la {top_categoria['categoria']} (tu mayor gasto)
+        4. **Auditoría de Gastos**: Revisa si todas las compras por categoría son realmente necesarias
+        5. **Benchmarking**: Compara tu distribución de gastos contra estándares de industria
         """
         return respuesta
     
     def obtener_analisis_promedios():
-        """Análisis de promedios de facturación"""
+        """Análisis de promedios de gasto/compra"""
         valor_facturado_total = df_facturacion['valor_total $'].sum()
         promedio_factura = df_facturacion['valor_total $'].mean()
         
@@ -721,40 +727,40 @@ elif opcion == "Copiloto":
         por_anio.columns = ['anio', 'total_facturas', 'valor_total']
         
         respuesta = f"""
-        **💰 Promedios de Facturación**
+        **💸 Promedios de Gasto/Compra**
         
-        **Métricas Generales:**
-        • Valor total facturado: ${valor_facturado_total:,.2f}
-        • Promedio por factura: ${promedio_factura:,.2f}
-        • Promedio de facturas por mes: {promedio_facturas_por_mes:.0f}
+        **Métricas de Inversión General:**
+        • Gasto total acumulado: ${valor_facturado_total:,.2f}
+        • Gasto promedio por compra (orden): ${promedio_factura:,.2f}
+        • Promedio de órdenes/facturas por mes: {promedio_facturas_por_mes:.0f}
         
-        **Facturación por Año:**
+        **Gasto por Año:**
         """
         for row in por_anio.itertuples():
             valor_promedio_anio = row.valor_total / row.total_facturas if row.total_facturas > 0 else 0
-            respuesta += f"\n• **{row.anio}**: {row.total_facturas:.0f} facturas | ${row.valor_total:,.2f} (Promedio: ${valor_promedio_anio:,.2f})"
+            respuesta += f"\n• **{row.anio}**: {row.total_facturas:.0f} órdenes | ${row.valor_total:,.2f} (Promedio: ${valor_promedio_anio:,.2f})"
         
-        tendencia = "📈 En crecimiento" if por_anio.iloc[-1]['valor_total'] > por_anio.iloc[0]['valor_total'] else "📉 En decline"
+        tendencia = "📈 Gastos crecientes" if por_anio.iloc[-1]['valor_total'] > por_anio.iloc[0]['valor_total'] else "📉 Gastos decrecientes"
         
         respuesta += f"""
         
         **Tendencia General:** {tendencia}
         
         **📊 Análisis:**
-        El promedio de ${promedio_factura:,.2f} por factura es tu ticket promedio.
-        La consistencia de facturas por mes ({promedio_facturas_por_mes:.0f}) indica la velocidad de operación.
+        El gasto promedio de ${promedio_factura:,.2f} por orden es tu ticket promedio de compra.
+        La consistencia de órdenes por mes ({promedio_facturas_por_mes:.0f}) indica tu velocidad de operación y flujo de inversión.
         
-        **Implicaciones para el Negocio:**
-        - **Predictibilidad**: Permite proyectar ingresos y recursos
-        - **Capacidad**: Ayuda a dimensionar equipo y operaciones
-        - **Eficiencia**: Facturas más altas = mejor eficiencia administrativa
+        **Implicaciones para Gestión de Gastos:**
+        - **Predictibilidad**: Te permite presupuestar y planificar cashflow
+        - **Capacidad**: Ayuda a dimensionar áreas de compras y almacén
+        - **Eficiencia**: Órdenes mayores = mejor negociación y menos costos administrativos
         
         **💡 Recomendaciones Estratégicas:**
-        1. **Aumentar Ticket Promedio**: Negocie contratos de mayor valor  
-        2. **Acelerar Rotación**: Incremente cantidad de facturas haciendo procesos más eficientes
-        3. **Consolidación**: Agrupe múltiples pedidos en menos facturas para ahorrar en administración
-        4. **Automatización**: Automatice para manejar más facturas sin aumentar costos
-        5. **Proyección**: Use promedios para planificar capital de trabajo
+        1. **Consolidación de Compras**: Agrupa pequeñas órdenes en compras mayores para mejores precios
+        2. **Automatización**: Implementa sistemas para gestionar más órdenes sin aumentar costos
+        3. **Negociación por Volumen**: Usa el volumen total anual para negociar descuentos anuales
+        4. **Optimización de Inventario**: Mejora rotación para evitar almacenaje innecesario
+        5. **Proyección Presupuestaria**: Usa promedios para planificar presupuesto anual y cashflow
         """
         return respuesta
     
@@ -763,27 +769,27 @@ elif opcion == "Copiloto":
         salud_porcentaje = (df_total_pendiente_por_anio['total_pendiente'].sum() / total_valor_facturado) * 100 if total_valor_facturado > 0 else 0
         
         respuesta = f"""
-        **📋 Estado General de la Empresa**
+        **� Estado General de la Empresa (Análisis de Compras y Gastos)**
         
         **KPIs Principales:**
-        • Total de proveedores: {total_proveedores_unicos}
-        • Productos únicos: {total_productos_unicos}
-        • Total facturaciones: {total_facturaciones}
-        • Valor total facturado: ${total_valor_facturado:,.2f}
-        • Cartera pendiente: {salud_porcentaje:.1f}% (${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
-        • Estado: {"🟢 SALUDABLE" if salud_porcentaje < 30 else "🟡 MODERADO" if salud_porcentaje < 70 else "🔴 CRÍTICO"}
+        • Total de proveedores activos: {total_proveedores_unicos}
+        • Tipos de productos comprados: {total_productos_unicos}
+        • Total de órdenes de compra: {total_facturaciones}
+        • Gasto total acumulado: ${total_valor_facturado:,.2f}
+        • Cartera pendiente de pago: {salud_porcentaje:.1f}% (${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
+        • Salud de Pagos: {"🟢 SALUDABLE" if salud_porcentaje < 30 else "🟡 MODERADO" if salud_porcentaje < 70 else "🔴 CRÍTICO"}
         
         **📊 Análisis Integral:**
-        Tu empresa tiene un modelo de negocio basado en {total_productos_unicos} productos distribuidos a {total_proveedores_unicos} proveedores.
-        La facturación de ${total_valor_facturado:,.2f} distribuida en {total_facturaciones} facturas muestra 
-        un ticket promedio de ${total_valor_facturado/total_facturaciones:,.2f}.
+        Tu empresa gestiona compras a través de {total_proveedores_unicos} proveedores para {total_productos_unicos} tipos de productos.
+        El gasto total de ${total_valor_facturado:,.2f} distribuido en {total_facturaciones} órdenes muestra 
+        un gasto promedio por orden de ${total_valor_facturado/total_facturaciones:,.2f}.
         
-        **💡 Prioridades Estratégicas:**
-        1. **Urgente**: Gestionar cartera pendiente (${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f})
-        2. **Importante**: Diversificar productos y proveedores
-        3. **Mejora**: Aumentar ticket promedio y velocidad de facturación
-        4. **Innovación**: Explorar nuevas categorías y clientes
-        5. **Sostenibilidad**: Fortalecer relaciones clave con múltiples alternativas
+        **💡 Prioridades Estratégicas de Compras:**
+        1. **Urgente**: Gestionar pagos pendientes (${df_total_pendiente_por_anio['total_pendiente'].sum():,.2f}) para mantener buenas relaciones con proveedores
+        2. **Importante**: Diversificar base de proveedores para reducir riesgos de suministro
+        3. **Mejora**: Consolidar órdenes para aumentar poder de negociación
+        4. **Oportunidad**: Auditar categorías mayores de gasto para identificar ahorros
+        5. **Sostenibilidad**: Fortalecer relaciones clave manteniendo pagos al día y siendo buen cliente
         """
         return respuesta
     
@@ -853,12 +859,12 @@ elif opcion == "Copiloto":
     st.write("**💡 Preguntas sugeridas - Haz clic para explorar:**")
     
     sugerencias = [
-        ("🏆 Productos Top", "¿Cuáles son nuestros productos más vendidos?"),
-        ("📉 Productos Bajos", "¿Cuáles son nuestros productos menos vendidos?"),
+        ("🛒 Compras Principales", "¿Cuáles son nuestros productos más comprados?"),
+        ("📦 Compras Menores", "¿Cuáles son nuestros productos menos comprados?"),
         ("🏭 Proveedores", "¿Quiénes son nuestros proveedores principales?"),
-        ("⏳ Cartera Pendiente", "¿Cómo está nuestra cartera pendiente?"),
-        ("📂 Categorías", "¿Cómo se distribuye nuestro negocio por categorías?"),
-        ("💰 Promedios", "¿Cuál es el promedio de facturación?"),
+        ("⏳ Pagos Pendientes", "¿Cómo está nuestra cartera pendiente?"),
+        ("📂 Gastos por Categoría", "¿Cómo se distribuye nuestro gasto por categorías?"),
+        ("💸 Promedios de Gasto", "¿Cuál es el promedio de gasto por compra?"),
         ("📊 Salud General", "¿Cuál es el estado general de la empresa?"),
         ("💡 Recomendaciones", "¿Qué recomendaciones estratégicas tiene?")
     ]
