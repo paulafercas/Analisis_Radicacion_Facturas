@@ -537,7 +537,7 @@ elif opcion == "Facturas":
     st.plotly_chart(fig_pie)
 
 elif opcion == "Chatbot":
-    st.header("🤖 Chatbot Financiero - Análisis Inteligente")
+    st.header("🤖 Chatbot de radicación de facturas - Análisis Inteligente")
     st.markdown("*Chatbot inteligente para análisis empresarial y recomendaciones estratégicas*")
     
     # ==================== FUNCIONES AUXILIARES ====================
