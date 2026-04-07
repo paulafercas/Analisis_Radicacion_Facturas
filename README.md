@@ -1,6 +1,7 @@
 # Proyecto Análisis De Datos Integrador 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white&style=for-the-badge)
 ## Descripción
 
 Este proyecto consiste en aplicar los conocimientos adquiridos durante el bootcamp de Talento Tech centrado en el análisis de datos aplicado en la recepción y radicación de facturas de proveedores.
