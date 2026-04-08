@@ -4,17 +4,6 @@ import plotly.express as px
 from pandasql import sqldf
 import unicodedata
 
-"""
-# 1. Importación de librerías
-
-En esta sección se importan las librerías necesarias para el funcionamiento de la aplicación:
-
-- `streamlit`: Framework para crear aplicaciones web interactivas con Python.
-- `pandas`: Librería para manipulación y análisis de datos.
-- `plotly.express`: Librería para crear gráficos interactivos.
-- `pandasql`: Permite ejecutar consultas SQL sobre DataFrames de pandas.
-- `unicodedata`: Utilizada para normalizar texto y eliminar acentos.
-"""
 
 #Dataframe para facturacion.csv
 df_facturacion= pd.read_csv("Data/Facturacion.csv", sep=';', encoding='latin1')
@@ -25,17 +14,6 @@ df_pedidos = pd.read_csv("Data/Pedidos.csv", sep=';', encoding='latin1')
 #Dataframe para proveedor.csv
 df_proveedor = pd.read_csv("Data/Proveedor.csv", sep=';', encoding='latin1')
 
-"""
-# 2. Creación de los dataframes
-
-Se crean los DataFrames principales a partir de los archivos CSV:
-
-- `df_facturacion`: Contiene datos de facturación con información sobre facturas, proveedores, valores, fechas y estados.
-- `df_pedidos`: Incluye datos de pedidos con productos, cantidades y valores totales.
-- `df_proveedor`: Almacena información de proveedores como nombres, categorías y ubicaciones.
-
-Los archivos se leen con separador ';' y codificación 'latin1' para manejar caracteres especiales.
-"""
 
 # Convertir fechas a datetime
 df_facturacion['fecha_factura'] = pd.to_datetime(df_facturacion['fecha_factura'])
@@ -64,20 +42,7 @@ for col in ['nombre_proveedor', 'categoria', 'ubicacion']:
 #Ejecutamos sql
 pysqldf = lambda q: sqldf(q, globals())
 
-"""
-# 3. Consultas importantes utilizando la sintaxis de SQL
 
-Se realizan diversas consultas SQL sobre los DataFrames para extraer insights clave:
-
-- **Top productos por cantidad y valor**: Identifican los productos más y menos pedidos tanto en volumen como en valor facturado.
-- **Top proveedores**: Muestran proveedores con mayor y menor número de facturaciones y valor total facturado.
-- **Facturas pendientes**: Analizan facturas no pagadas por año, valor pendiente y responsables.
-- **Análisis temporal**: Consultas para identificar meses con mayor actividad de facturación por año.
-- **Frecuencia de tipos de factura**: Distribuyen las facturas entre físicas y electrónicas.
-- **Métricas generales**: Calculan totales únicos de proveedores, productos, facturaciones y valores.
-
-Estas consultas utilizan GROUP BY, SUM, COUNT, ORDER BY y filtros para agrupar y ordenar datos, permitiendo análisis comparativos y rankings.
-"""
 
 # Nuevos DataFrames basados en las consultas SQL proporcionadas
 
@@ -270,25 +235,6 @@ df_totales_generales = pd.DataFrame({
     'valor': [total_proveedores_unicos, total_facturaciones, total_valor_facturado, total_productos_unicos]
 })
 
-"""
-# 4. Presentación con Streamlit
-
-La aplicación Streamlit está organizada en dashboards interactivos con navegación lateral:
-
-- **Inicio**: Página principal con métricas generales (proveedores únicos, total facturaciones, valor facturado, productos únicos) y escala de salud financiera basada en facturas pendientes.
-- **Productos**: Análisis de productos con gráficos de barras para top productos por volumen, valor, y comparaciones de mayor/menor facturación.
-- **Proveedores**: Dashboards de proveedores mostrando top por número de facturaciones y valor facturado, con gráficos interactivos.
-- **Facturas pendientes**: Visualización de pendientes por año, tabla de valores pendientes, responsables con más pendientes y top proveedores con cartera pendiente.
-- **Facturas**: Análisis temporal por año con selector para ver facturas por mes, y distribución de tipos de factura (física/electrónica) en gráfico circular.
-- **Chatbot**: Asistente inteligente que responde preguntas sobre análisis financiero, productos, proveedores, categorías y recomendaciones estratégicas.
-
-Características destacadas:
-- Diseño responsive con CSS personalizado en colores púrpura, azul y naranja.
-- Gráficos interactivos con Plotly Express.
-- Navegación intuitiva con sidebar.
-- Chatbot con sugerencias rápidas y análisis automatizado.
-- Métricas en tiempo real con formato de tarjetas.
-"""
 
 # Limpiar nombres: remover tildes (sin truncar)
 
